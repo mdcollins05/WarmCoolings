@@ -1,0 +1,19 @@
+author: MDCollins
+database: false
+description: Warmups/Cooldowns
+generator: http://dinnerbone.com/minecraft/tools/pluginator/
+main: com.blockmovers.plugins.warmcoolings.Main
+name: WarmCoolings
+startup: postworld
+url: http://blockmovers.com/
+version: '0.1'
+permissions:
+  warmcoolings.warmup.exempt:
+    default: false
+  warmcoolings.cooldown.exempt:
+    default: false
+  warmcoolings.exempt:
+    default: false
+    children:
+      warmcoolings.warmup.exempt: true
+      warmcoolings.cooldown.exempt: true
