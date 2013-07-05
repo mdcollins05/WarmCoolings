@@ -7,6 +7,7 @@ package com.blockmovers.plugins.warmcoolings;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -23,18 +24,25 @@ public class Listeners implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Player p = event.getPlayer();
         String command = event.getMessage().toLowerCase().split(" ")[0];
+        String fullCommand = event.getMessage();
+        Boolean didCooldown = false;
         if (!p.hasPermission("warmcoolings.cooldown.exempt")) {
             for (String cooldown : plugin.config.Cooldowns) {
                 String[] split = cooldown.split(",");
                 if (command.startsWith(split[0]) || command.equals(split[0])) {
                     Integer lastRun = plugin.util.getCurrentTime() - plugin.util.getLastRun(p.getName(), command);
                     if (lastRun >= Integer.valueOf(split[1])) {
-                        plugin.util.setLastRun(p.getName(), command);
+                        //plugin.util.setLastRun(p.getName(), command);
+                        didCooldown = false;
                     } else {
+                        didCooldown = true; //Pointless cause we return/cancel the event but whateves
                         p.sendMessage(ChatColor.RED + "You must wait " + plugin.util.timeToString(Integer.valueOf(split[1]) - lastRun) + " until you can use that command again!");
                         event.setCancelled(true);
                         return;
@@ -43,6 +51,7 @@ public class Listeners implements Listener {
             }
         }
         if (!p.hasPermission("warmcoolings.warmup.exempt")) {
+            Boolean noMatch = true;
             for (String warmup : plugin.config.Warmups) {
                 String[] split = warmup.split(",");
                 if (command.startsWith(split[0]) || command.equals(split[0])) {
@@ -50,12 +59,19 @@ public class Listeners implements Listener {
                         plugin.getServer().getScheduler().cancelTask(plugin.playerWarmupTaskID.get(p.getName()));
                         plugin.playerWarmupTaskID.remove(p.getName());
                     }
-                    CommandWarmupTask task = new CommandWarmupTask(plugin, p, p.getLocation(), command);
+                    CommandWarmupTask task = new CommandWarmupTask(plugin, p, p.getLocation(), fullCommand);
                     Integer tid = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, Integer.valueOf(split[1]) * 20l);
                     plugin.playerWarmupTaskID.put(p.getName(), tid);
                     p.sendMessage(ChatColor.RED + "You must wait " + plugin.util.timeToString(Integer.valueOf(split[1])) + " before command " + command + " has warmed up!");
-                    event.setCancelled(true);
-                    return;
+                    noMatch = false;
+                }
+            }
+            if (noMatch == false) {
+                event.setCancelled(true);
+                return;
+            } else {
+                if (didCooldown == false) {
+                    plugin.util.setLastRun(p.getName(), command);
                 }
             }
         }

@@ -4,13 +4,8 @@
  */
 package com.blockmovers.plugins.warmcoolings;
 
-import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Giant;
 import org.bukkit.entity.Player;
 
 /**
@@ -40,7 +35,7 @@ public class CommandWarmupTask implements Runnable {
             player.sendMessage(ChatColor.RED + "You've moved! The command has been cancelled.");
         } else {
             plugin.getServer().dispatchCommand(player, command.substring(1));
-            plugin.util.setLastRun(player.getName(), "/" + command);
+            plugin.util.setLastRun(player.getName(), "/" + command.toLowerCase().split(" ")[0]);
         }
         plugin.getServer().getScheduler().cancelTask(plugin.playerWarmupTaskID.get(player.getName()));
         plugin.playerWarmupTaskID.remove(player.getName());
