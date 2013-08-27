@@ -44,6 +44,13 @@ public class Utility {
         commands.put(command, this.getCurrentTime());
         plugin.playerCommands.put(player, commands);
     }
+    
+    public String removeLeadingSlash(String string) {
+        if (string.startsWith("/")) {
+            string = string.substring(1);
+        }
+        return string;
+    }
 
     public Integer getCurrentTime() {
         Calendar cal = new GregorianCalendar();

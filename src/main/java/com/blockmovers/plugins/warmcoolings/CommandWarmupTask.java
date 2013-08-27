@@ -35,7 +35,7 @@ public class CommandWarmupTask implements Runnable {
             player.sendMessage(ChatColor.RED + "You've moved! The command has been cancelled.");
         } else {
             plugin.getServer().dispatchCommand(player, command.substring(1));
-            plugin.util.setLastRun(player.getName(), "/" + command.toLowerCase().split(" ")[0]);
+            plugin.util.setLastRun(player.getName(), plugin.util.removeLeadingSlash(command.toLowerCase().split(" ")[0]));
         }
         plugin.getServer().getScheduler().cancelTask(plugin.playerWarmupTaskID.get(player.getName()));
         plugin.playerWarmupTaskID.remove(player.getName());
