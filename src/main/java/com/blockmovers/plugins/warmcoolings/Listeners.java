@@ -42,7 +42,7 @@ public class Listeners implements Listener {
                         didCooldown = false;
                     } else {
                         didCooldown = true;
-                        p.sendMessage(ChatColor.RED + "You must wait " + plugin.util.timeToString(Integer.valueOf(split[1]) - lastRun) + " until you can use that command again!");
+                        p.sendMessage(ChatColor.RED + "You must wait " + plugin.util.timeToString(Integer.valueOf(split[1]) - lastRun) + " until you can use " + command + " again!");
                         break;
                     }
                 }
@@ -61,7 +61,7 @@ public class Listeners implements Listener {
                         CommandWarmupTask task = new CommandWarmupTask(plugin, p, p.getLocation(), fullCommand);
                         Integer tid = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, Integer.valueOf(split[1]) * 20l);
                         plugin.playerWarmupTaskID.put(p.getName(), tid);
-                        p.sendMessage(ChatColor.RED + "You must wait " + plugin.util.timeToString(Integer.valueOf(split[1])) + " before command " + command + " has warmed up!");
+                        p.sendMessage(ChatColor.RED + "You must wait " + plugin.util.timeToString(Integer.valueOf(split[1])) + " before " + command + " has warmed up!");
                         didWarmup = true;
                         break;
                     }
