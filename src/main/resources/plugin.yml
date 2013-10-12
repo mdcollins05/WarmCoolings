@@ -6,7 +6,7 @@ main: com.blockmovers.plugins.warmcoolings.Main
 name: WarmCoolings
 startup: postworld
 url: http://blockmovers.com/
-version: '0.1'
+version: '${version}'
 permissions:
   warmcoolings.warmup.exempt:
     default: false
