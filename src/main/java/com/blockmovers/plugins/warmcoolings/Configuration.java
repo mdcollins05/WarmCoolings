@@ -37,6 +37,7 @@ public class Configuration {
         cooldowns.add("/spawn,60");
         cooldowns.add("/heal,60");
         cooldowns.add("/food,60");
+	cooldowns.add("/me,7");
         plugin.getConfig().addDefault("cooldowns", cooldowns);
         
 
